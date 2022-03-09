@@ -1,0 +1,5 @@
+﻿# 启动dapr 边车 用于开发调试
+dapr run -a frontend -G 30001 -H 50001 -p 5001
+
+# 已dapr运行时启动程序
+dapr run --dapr-http-port 3501 --app-port 5001 --app-id frontend  dotnet .\FrontEnd.dll

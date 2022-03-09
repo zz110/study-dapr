@@ -1,0 +1,5 @@
+﻿# 启动dapr 边车 用于开发调试
+dapr run -a backend -G 30000 -H 50000 -p 5000
+
+# 已dapr运行时启动程序
+dapr run --dapr-http-port 3511 --app-port 5000 --app-id backend dotnet .\BackEnd.dll
