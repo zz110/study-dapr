@@ -3,3 +3,6 @@
 ################################################################################
 
 /service_invoke/BackEnd/obj
+/service_invoke/BackEnd/bin/Debug/net6.0
+/service_invoke/FrontEnd/obj
+/service_invoke/FrontEnd/bin/Debug/net6.0

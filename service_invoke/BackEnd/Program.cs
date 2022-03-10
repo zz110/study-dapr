@@ -1,8 +1,25 @@
- var builder = WebApplication.CreateBuilder(args);
+using BackEnd;
+using System.Diagnostics;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 #if DEBUG
+
+//¿ª·¢µ÷ÊÔ
+Process[] processes = System.Diagnostics.Process.GetProcessesByName("daprd");
+
+foreach (Process process in processes)
+{
+    string argss = process.GetCommandLineArgs();
+}
+
+if (processes.Any(x => x.GetCommandLineArgs().Contains(" backend ")) == false)
+{
+    Process.Start(@"C:\Users\xiaocai\.dapr\bin\daprd.exe", "--app-id backend --app-port 5000 -dapr-http-port 50000 -dapr-grpc-port 30000 -metrics-port 9002");
+}
+
 
 builder.Services.AddControllers().AddDapr(config =>
 {

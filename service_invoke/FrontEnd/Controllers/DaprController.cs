@@ -21,10 +21,12 @@ namespace FrontEnd.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAsync()
         {
+            //开发调试
             // 创建 dapr HttpClient  传入 app-id  , daprEndpoint  
             // DaprClient.CreateInvokeHttpClient() 这样创建实例 默认连接端口为：3500
-            using var httpClient = DaprClient.CreateInvokeHttpClient("backend", "http://localhost:50000");
-     
+            //using var httpClient = DaprClient.CreateInvokeHttpClient("backend", "http://localhost:50000");
+
+            using var httpClient = DaprClient.CreateInvokeHttpClient();
             var result = await httpClient.GetAsync("http://backend/WeatherForecast");
 
             var resultContext = string.Format("result is {0} {1}",
@@ -37,9 +39,13 @@ namespace FrontEnd.Controllers
         [HttpGet("get2")]
         public async Task<IEnumerable<WeatherForecast>> Get2Async()
         {
+            // 开发调试
             // DaprClientBuilder 创建 daprClient  并指定 http调用端点
             // DaprClientBuilder().Build(); 这样创建实例 默认连接端口为：3500
-            using var daprClient = new DaprClientBuilder().UseHttpEndpoint("http://localhost:50000").Build();
+            //using var daprClient = new DaprClientBuilder().UseHttpEndpoint("http://localhost:50000").Build();
+
+
+            using var daprClient = new DaprClientBuilder().Build();
             var result = await daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
                 HttpMethod.Get,
                 "backend",
