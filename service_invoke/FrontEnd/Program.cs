@@ -5,27 +5,30 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+#region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
+
 #if DEBUG
 
-//¿ª·¢µ÷ÊÔ
-Process[] processes = System.Diagnostics.Process.GetProcessesByName("daprd");
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//Process[] processes = System.Diagnostics.Process.GetProcessesByName("daprd");
 
-foreach (Process process in processes)
-{
-    string argss = process.GetCommandLineArgs();
-}
+//foreach (Process process in processes)
+//{
+//    string argss = process.GetCommandLineArgs();
+//}
 
-if (processes.Any(x => x.GetCommandLineArgs().Contains(" frontend ")) == false)
-{
-    Process.Start(@"C:\Users\xiaocai\.dapr\bin\daprd.exe", "--app-id frontend --app-port 5001 -dapr-http-port 50001 -dapr-grpc-port 30001 -metrics-port 9002");
-}
+//if (processes.Any(x => x.GetCommandLineArgs().Contains(" frontend ")) == false)
+//{
+//    Process.Start(@"C:\Users\xiaocai\.dapr\bin\daprd.exe", "--app-id frontend --app-port 5001 -dapr-http-port 50001 -dapr-grpc-port 30001 -metrics-port 9002");
+//}
 
 
-//½öÒÀÀµ×¢ÈëDaprClient ÊµÀýÊ±²Å»áÓÃµ½´Ë´¦ÅäÖÃ
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½DaprClient Êµï¿½ï¿½Ê±ï¿½Å»ï¿½ï¿½Ãµï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½
 builder.Services.AddControllers().AddDapr(config =>
 {
-    //ºó¶Ë·þÎñdapr¶Ëµã
-    config.UseHttpEndpoint("http://localhost:3511");
+    //ï¿½ï¿½Ë·ï¿½ï¿½ï¿½daprï¿½Ëµï¿½
+    config.UseHttpEndpoint("http://localhost:3501");
     //config.UseGrpcEndpoint("http://localhost:30000");
 });
 
@@ -35,6 +38,9 @@ builder.Services.AddControllers().AddDapr(config =>
 
 #endif
 
+#endregion
+
+
 
 
 
@@ -42,10 +48,16 @@ builder.Services.AddControllers().AddDapr(config =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.WebHost.UseKestrel().UseUrls("http://*:5001");
+builder.WebHost.UseKestrel().UseUrls("http://localhost:5001");
 
 var app = builder.Build();
 
+
+app.Use((context, next) =>
+{
+    context.Request.EnableBuffering();
+    return next();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -56,6 +68,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
+app.UseCloudEvents();
+app.MapSubscribeHandler();
+
 app.MapControllers();
+
 
 app.Run();
