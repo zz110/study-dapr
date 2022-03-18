@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using FrontEnd;
+using FrontEnd.ActorDefine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +26,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 //������ע��DaprClient ʵ��ʱ�Ż��õ��˴�����
-builder.Services.AddControllers().AddDapr(config =>
-{
-    //��˷���dapr�˵�
-    config.UseHttpEndpoint("http://localhost:3501");
-    //config.UseGrpcEndpoint("http://localhost:30000");
-});
+//builder.Services.AddControllers().AddDapr(config =>
+//{
+//    //��˷���dapr�˵�
+//    config.UseHttpEndpoint("http://localhost:3501");
+//    //config.UseGrpcEndpoint("http://localhost:30000");
+//});
 
 #else
 
@@ -41,7 +42,12 @@ builder.Services.AddControllers().AddDapr(config =>
 #endregion
 
 
-
+builder.Services.AddLogging();
+builder.Services.AddControllers().AddDapr();
+builder.Services.AddActors(opt =>
+{
+    opt.Actors.RegisterActor<OrderStatusActor>();
+});
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -70,6 +76,7 @@ app.UseAuthorization();
 
 app.UseCloudEvents();
 app.MapSubscribeHandler();
+app.MapActorsHandlers();
 
 app.MapControllers();
 
