@@ -3,7 +3,7 @@ using System.Text;
 
 namespace FrontEnd.ActorDefine
 {
-    public class OrderStatusActor : Actor, IOrderStatusActor,IRemindable
+    public class OrderStatusActor : Actor, IOrderStatusActor
     {
 
         private readonly ILogger<OrderStatusActor> _logger;
@@ -14,7 +14,7 @@ namespace FrontEnd.ActorDefine
 
             // StartTimerAsync("test-timer", "this is a test timer").ConfigureAwait(false).GetAwaiter().GetResult();
 
-            SetReminderAsync("this is a test reminder").ConfigureAwait(false).GetAwaiter().GetResult();
+            // SetReminderAsync("this is a test reminder").ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<string> GetStatus(string orderId)
@@ -41,7 +41,7 @@ namespace FrontEnd.ActorDefine
 
         public Task StopTimerAsync(string name)
         {
-           return UnregisterTimerAsync(name);
+            return UnregisterTimerAsync(name);
         }
 
         public Task TimerCallbackAsync(byte[] state)

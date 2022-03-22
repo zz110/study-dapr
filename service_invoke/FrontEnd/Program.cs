@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Dapr.Client;
+using Dapr.Extensions.Configuration;
 using FrontEnd;
 using FrontEnd.ActorDefine;
 
@@ -49,6 +51,12 @@ builder.Services.AddActors(opt =>
     opt.Actors.RegisterActor<OrderStatusActor>();
 });
 
+builder.Host.ConfigureAppConfiguration(config =>
+{
+    var daprClient = new DaprClientBuilder().Build();
+    var secretDescriptors = new List<DaprSecretDescriptor> { new DaprSecretDescriptor("RabbitMQConnectStr") };
+    config.AddDaprSecretStore("secrets01", secretDescriptors, daprClient);
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
